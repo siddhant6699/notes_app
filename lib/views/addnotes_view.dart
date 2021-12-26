@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notes_app/addnotes/addnotes_bloc.dart';
+import 'package:notes_app/addnotes/addnotes_event.dart';
+import 'package:notes_app/addnotes/addnotes_state.dart';
+import 'package:notes_app/notes_model.dart';
 
 class AddNotes extends StatefulWidget {
   const AddNotes({Key? key}) : super(key: key);
@@ -10,90 +15,92 @@ class AddNotes extends StatefulWidget {
 class _AddNotesState extends State<AddNotes> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(17.0),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  SizedBox(
-                    width: 40,
-                    height: 35,
-                    child: TextButton(
-                      style: TextButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4),
+    return BlocProvider<AddNoteBloc>(
+      create: (context) => AddNoteBloc(),
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: BlocBuilder<AddNoteBloc, NoteState>(builder: (context, state){
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(17.0),
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: 40,
+                      height: 35,
+                      child: TextButton(
+                        style: TextButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
                         ),
+                        child: const Icon(
+                          Icons.arrow_left,
+                          color: Colors.black,
+                        ),
+                        onPressed: () {
+                          BlocProvider.of<AddNoteBloc>(context).add(
+                              AddNoteRequest(
+                                  noteDate: Note(
+                                      title: titleController.text,
+                                      description: descriptionController.text,
+                                      createdOn: DateTime.now())));
+                          Navigator.pop(context);
+                        },
                       ),
-                      child: const Icon(
-                        Icons.arrow_left,
-                        color: Colors.black,
+                    ),
+                    IconButton(
+                      tooltip: "Save Note",
+                      onPressed: () {},
+                      icon: const Icon(
+                        Icons.check_box,
+                        color: Colors.white,
+                        size: 41,
                       ),
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
                     ),
-                  ),
-                  // IconButton(
-                  //   tooltip: "Go Back",
-                  //   onPressed: () {
-                  //     Navigator.pop(context);
-                  //   },
-                  //   icon: const Icon(
-                  //     Icons.arrow_back_ios_new_outlined,
-                  //     color: Colors.white,
-                  //     size: 35,
-                  //   ),
-                  // ),
-                  IconButton(
-                    tooltip: "Save Note",
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.check_box,
-                      color: Colors.white,
-                      size: 41,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              TextField(
-                style: const TextStyle(fontSize: 30.0, color: Colors.white),
-                controller: titleController,
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Username',
-                  hintStyle: TextStyle(color: Color(0Xff939393), fontSize: 30),
+                  ],
                 ),
-              ),
-              const SizedBox(
-                height: 17,
-              ),
-              TextField(
-                keyboardType: TextInputType.multiline,
-                maxLines: null,
-                style: const TextStyle(fontSize: 16.0, color: Colors.white),
-                controller: descriptionController,
-                decoration: const InputDecoration.collapsed(
-                  hintText: 'Type something...',
-                  hintStyle: TextStyle(color: Color(0Xff939393), fontSize: 16),
+                const SizedBox(
+                  height: 12,
                 ),
-              ),
-            ],
+                TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  style: const TextStyle(fontSize: 31.0, color: Colors.white),
+                  controller: titleController,
+                  decoration: const InputDecoration.collapsed(
+                    hintText: 'Title',
+                    hintStyle:
+                        TextStyle(color: Color(0Xff939393), fontSize: 31.0),
+                  ),
+                ),
+                const SizedBox(
+                  height: 17,
+                ),
+                TextField(
+                  textCapitalization: TextCapitalization.sentences,
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null,
+                  style: const TextStyle(fontSize: 17.0, color: Colors.white),
+                  controller: descriptionController,
+                  decoration: const InputDecoration.collapsed(
+                    hintText: 'Type something...',
+                    hintStyle:
+                        TextStyle(color: Color(0Xff939393), fontSize: 17.0),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
-    );
+        );})));
   }
 }
