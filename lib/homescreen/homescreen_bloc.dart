@@ -15,7 +15,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       try {
         final notesResponce = await _notesDatabase.readAllNotes();
-        print(notesResponce.toString());
         yield HomeLoadSuccess(notesListing: notesResponce);
       } catch (e) {
         yield HomeLoadFailed(error: e);

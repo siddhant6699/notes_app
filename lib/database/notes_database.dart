@@ -19,7 +19,7 @@ class NotesDatabase {
   Future<Database> _initDB(String filepath) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, filepath);
-    print('DB CONNECTION');
+    print('DB CONNECTED');
     return await openDatabase(path, version: 1, onCreate: _createDB);
   }
 
@@ -32,7 +32,8 @@ class NotesDatabase {
       ${NoteFeilds.id} $idType,
       ${NoteFeilds.title} $textType,
       ${NoteFeilds.description} $textType,
-      ${NoteFeilds.createdOn} $textType
+      ${NoteFeilds.createdOn} $textType,
+      ${NoteFeilds.cardColor} $textType
     )
     ''');
   }

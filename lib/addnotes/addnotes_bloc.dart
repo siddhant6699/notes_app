@@ -13,9 +13,7 @@ class AddNoteBloc extends Bloc<AddNoteEvent, NoteState> {
     if (event is AddNoteRequest) {
       yield NoteAddClick();
       try {
-        print(event.noteDate);
         final notesResponce = await _notesDatabase.create(event.noteDate);
-        print(notesResponce);
         yield NoteAddSuccess(responce:notesResponce);
       } catch (e) {
         yield NoteAddFailed(error: e);

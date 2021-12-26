@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -27,6 +28,15 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setState(() {
+      print("object");
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()..add(HomeDatabaseRequest()),
@@ -40,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
           } else if (state is HomeLoadSuccess) {
             return SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(15.0),
+                padding: const EdgeInsets.all(18.0),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -68,7 +78,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       const SizedBox(
-                        height: 8,
+                        height: 15,
                       ),
                       StaggeredGridView.countBuilder(
                           shrinkWrap: true, //
@@ -80,10 +90,48 @@ class _HomeScreenState extends State<HomeScreen> {
                           itemBuilder: (context, index) {
                             return Container(
                               decoration: BoxDecoration(
-                                  color: colorList[random.nextInt(7)],
+                                  color: Color(int.parse(
+                                      state.notesListing[index].cardColor)),
                                   //color: Colors.pinkAccent,
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(15))),
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          state.notesListing[index].title,
+                                          style: TextStyle(fontSize: 23,fontWeight:FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 5),
+                                        Text(
+                                          state.notesListing[index].description,
+                                          maxLines: 3,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 15),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(
+                                      (DateFormat.yMMMd().format(state
+                                              .notesListing[index].createdOn))
+                                          .toString(),
+                                      //(state.notesListing[index].createdOn).toString(),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                          fontSize: 15, color: Colors.black45),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             );
                           },
                           // itemBuilder: (context, index) {
@@ -104,7 +152,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           // },
                           staggeredTileBuilder: (index) {
                             return StaggeredTile.count(
-                                1, index.isEven ? 1.2 : 1.8);
+                                1, index.isEven ? 1.02 : 0.85);
                           }),
                     ],
                   ),
