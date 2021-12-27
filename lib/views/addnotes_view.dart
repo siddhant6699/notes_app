@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notes_app/addnotes/addnotes_bloc.dart';
 import 'package:notes_app/addnotes/addnotes_event.dart';
@@ -32,99 +33,123 @@ class _AddNotesState extends State<AddNotes> {
   Widget build(BuildContext context) {
     return BlocProvider<AddNoteBloc>(
         create: (context) => AddNoteBloc(),
-        child: Scaffold(
-            backgroundColor: Colors.black,
-            body:
-                BlocBuilder<AddNoteBloc, NoteState>(builder: (context, state) {
-              return SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 5,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: 40,
-                            height: 35,
-                            child: TextButton(
-                              style: TextButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4),
+        child: BlocBuilder<AddNoteBloc, NoteState>(builder: (context, state) {
+          return WillPopScope(
+            onWillPop: () async {
+              if (descriptionController.text.isEmpty ||
+                  titleController.text.isEmpty) {
+                Navigator.pop(context);
+              } else {
+                BlocProvider.of<AddNoteBloc>(context).add(AddNoteRequest(
+                    noteDate: Note(
+                  title: titleController.text,
+                  description: descriptionController.text,
+                  createdOn: DateTime.now(),
+                  cardColor: colorList[random.nextInt(7)],
+                )));
+                Navigator.pop(context);
+              }
+              return false;
+            },
+            child: Scaffold(
+                backgroundColor: Colors.black,
+                body: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      FocusScope.of(context).requestFocus(FocusNode());
+                    },
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.all(20.0),
+                        child: Column(
+                          children: [
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: 40,
+                                  height: 35,
+                                  child: TextButton(
+                                    style: TextButton.styleFrom(
+                                      backgroundColor: Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(4),
+                                      ),
+                                    ),
+                                    child: const Icon(
+                                      Icons.arrow_left,
+                                      color: Colors.black,
+                                    ),
+                                    onPressed: () {
+                                      if (descriptionController.text.isEmpty ||
+                                          titleController.text.isEmpty) {
+                                        Navigator.pop(context);
+                                      } else {
+                                        BlocProvider.of<AddNoteBloc>(context)
+                                            .add(AddNoteRequest(
+                                                noteDate: Note(
+                                          title: titleController.text,
+                                          description:
+                                              descriptionController.text,
+                                          createdOn: DateTime.now(),
+                                          cardColor:
+                                              colorList[random.nextInt(7)],
+                                        )));
+                                        Navigator.pop(context);
+                                      }
+                                    },
+                                  ),
                                 ),
-                              ),
-                              child: const Icon(
-                                Icons.arrow_left,
-                                color: Colors.black,
-                              ),
-                              onPressed: () {
-                                if (descriptionController.text.isEmpty ||
-                                    titleController.text.isEmpty) {
-                                  Navigator.pop(context);
-                                } else {
-                                  BlocProvider.of<AddNoteBloc>(context)
-                                      .add(AddNoteRequest(
-                                          noteDate: Note(
-                                    title: titleController.text,
-                                    description: descriptionController.text,
-                                    createdOn: DateTime.now(),
-                                    cardColor: colorList[random.nextInt(7)],
-                                  )));
-                                  Navigator.pop(context);
-                                }
-                              },
+                                IconButton(
+                                  tooltip: "Save Note",
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.check_box,
+                                    color: Colors.white,
+                                    size: 41,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ),
-                          IconButton(
-                            tooltip: "Save Note",
-                            onPressed: () {},
-                            icon: const Icon(
-                              Icons.check_box,
-                              color: Colors.white,
-                              size: 41,
+                            const SizedBox(
+                              height: 15,
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      TextField(
-                        textCapitalization: TextCapitalization.sentences,
-                        maxLines: null,
-                        style: const TextStyle(
-                            fontSize: 31.0, color: Colors.white),
-                        controller: titleController,
-                        decoration: const InputDecoration.collapsed(
-                          hintText: 'Title',
-                          hintStyle: TextStyle(
-                              color: Color(0Xff939393), fontSize: 31.0),
+                            TextField(
+                              textCapitalization: TextCapitalization.sentences,
+                              maxLines: null,
+                              style: const TextStyle(
+                                  fontSize: 31.0, color: Colors.white),
+                              controller: titleController,
+                              decoration: const InputDecoration.collapsed(
+                                hintText: 'Title',
+                                hintStyle: TextStyle(
+                                    color: Color(0Xff939393), fontSize: 31.0),
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 18,
+                            ),
+                            TextField(
+                              textCapitalization: TextCapitalization.sentences,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              style: const TextStyle(
+                                  fontSize: 17.0, color: Colors.white),
+                              controller: descriptionController,
+                              decoration: const InputDecoration.collapsed(
+                                hintText: 'Type something...',
+                                hintStyle: TextStyle(
+                                    color: Color(0Xff939393), fontSize: 17.0),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 18,
-                      ),
-                      TextField(
-                        textCapitalization: TextCapitalization.sentences,
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        style: const TextStyle(
-                            fontSize: 17.0, color: Colors.white),
-                        controller: descriptionController,
-                        decoration: const InputDecoration.collapsed(
-                          hintText: 'Type something...',
-                          hintStyle: TextStyle(
-                              color: Color(0Xff939393), fontSize: 17.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            })));
+                    ))),
+          );
+        }));
   }
 }

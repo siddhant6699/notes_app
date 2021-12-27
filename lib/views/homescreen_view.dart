@@ -16,41 +16,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Random random = Random();
-  List<Color> colorList = const [
-    Color(0xffFFAB91),
-    Color(0xffFFCC80),
-    Color(0xffE4EBA5),
-    Color(0xff81DEEA),
-    Color(0xffCF94DA),
-    Color(0xffF48FB1),
-    Color(0xff80CCC5),
-  ];
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    setState(() {
-      print("object");
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc()..add(HomeDatabaseRequest()),
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
-          if (state is HomeLoadInProgress) {
-            return Center(
+      child: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
+        if (state is HomeLoadInProgress) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
               child: CircularProgressIndicator(),
-            );
-          } else if (state is HomeLoadSuccess) {
-            return SafeArea(
+            ),
+          );
+        } else if (state is HomeLoadSuccess) {
+          return Scaffold(
+            backgroundColor: Colors.black,
+            body: SafeArea(
               child: Padding(
-                padding: const EdgeInsets.all(18.0),
+                padding: const EdgeInsets.fromLTRB(18, 10, 18, 0),
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -108,12 +91,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                       children: [
                                         Text(
                                           state.notesListing[index].title,
-                                          style: TextStyle(fontSize: 23,fontWeight:FontWeight.bold),
+                                          maxLines: 1,
+                                          style: TextStyle(
+                                              fontSize: 23,
+                                              fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(height: 5),
                                         Text(
                                           state.notesListing[index].description,
-                                          maxLines: 3,
+                                          maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(fontSize: 15),
                                         ),
@@ -134,108 +120,43 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             );
                           },
-                          // itemBuilder: (context, index) {
-                          //   state.notesListing.isEmpty
-                          //       ? Text(
-                          //           'No Notes',
-                          //           style: TextStyle(
-                          //               color: Colors.white, fontSize: 25),
-                          //         )
-                          //       : Container(
-                          //           decoration: BoxDecoration(
-                          //               color: colorList[random.nextInt(7)],
-                          //               //color: Colors.pinkAccent,
-                          //               borderRadius: const BorderRadius.all(
-                          //                   Radius.circular(15))),
-                          //         );
-                          //   throw {};
-                          // },
                           staggeredTileBuilder: (index) {
                             return StaggeredTile.count(
-                                1, index.isEven ? 1.02 : 0.85);
+                                1, index.isEven ? 1.04 : 0.89);
                           }),
                     ],
                   ),
                 ),
               ),
-            );
-          } else if (state is HomeLoadFailed) {
-            return Text(state.error.toString());
-          } else {
-            return Center(
-              child: Text('No Note Created Till Now'),
-            );
-          }
-        }),
-        // SafeArea(
-        //   child: Padding(
-        //     padding: const EdgeInsets.all(15.0),
-        //     child: SingleChildScrollView(
-        //       child: Column(
-        //         children: [
-        //           const SizedBox(
-        //             height: 5,
-        //           ),
-        //           Row(
-        //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        //             children: [
-        //               const Text(
-        //                 'Notes',
-        //                 style: TextStyle(
-        //                     fontWeight: FontWeight.bold,
-        //                     fontSize: 30,
-        //                     color: Colors.white),
-        //               ),
-        //               IconButton(
-        //                   tooltip: "Profile",
-        //                   onPressed: () {},
-        //                   icon: const Icon(
-        //                     Icons.person_pin_rounded,
-        //                     color: Colors.white,
-        //                     size: 35,
-        //                   ))
-        //             ],
-        //           ),
-        //           const SizedBox(
-        //             height: 8,
-        //           ),
-        //           StaggeredGridView.countBuilder(
-        //               shrinkWrap: true, //
-        //               physics: const ScrollPhysics(),
-        //               crossAxisCount: 2,
-        //               crossAxisSpacing: 10,
-        //               mainAxisSpacing: 12,
-        //               itemCount: 10,
-        //               itemBuilder: (context, index) {
-        //                 return Container(
-        //                   decoration: BoxDecoration(
-        //                       color: colorList[random.nextInt(7)],
-        //                       //color: Colors.pinkAccent,
-        //                       borderRadius:
-        //                           const BorderRadius.all(Radius.circular(15))),
-        //                 );
-        //               },
-        //               staggeredTileBuilder: (index) {
-        //                 return StaggeredTile.count(1, index.isEven ? 1.2 : 1.8);
-        //               }),
-        //         ],
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white,
-          tooltip: "Add Note",
-          onPressed: () {
-            Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const AddNotes()));
-          },
-          child: const Icon(
-            Icons.add,
-            color: Colors.black,
-          ),
-        ),
-      ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.white,
+              tooltip: "Add Note",
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(
+                        builder: (context) => const AddNotes()))
+                    .then((value) => setState(() {
+                          BlocProvider.of<HomeBloc>(context)
+                              .add(HomeDatabaseRequest());
+                        }));
+              },
+              child: const Icon(
+                Icons.add,
+                color: Colors.black,
+              ),
+            ),
+          );
+        } else if (state is HomeLoadFailed) {
+          return Scaffold(
+              backgroundColor: Colors.black,
+              body: Text(state.error.toString()));
+        } else {
+          return Center(
+            child: Text('No Note Created Till Now'),
+          );
+        }
+      }),
     );
   }
 }
