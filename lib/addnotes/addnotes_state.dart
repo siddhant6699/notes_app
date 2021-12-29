@@ -1,6 +1,3 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../notes_model.dart';
-
 abstract class NoteState{}
 
 class NoteInitial extends NoteState{}

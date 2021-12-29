@@ -119,7 +119,7 @@ class _AddNotesState extends State<AddNotes> {
                             ),
                             TextField(
                               textCapitalization: TextCapitalization.sentences,
-                              maxLines: null,
+                              maxLines: 3,
                               style: const TextStyle(
                                   fontSize: 31.0, color: Colors.white),
                               controller: titleController,
@@ -132,17 +132,23 @@ class _AddNotesState extends State<AddNotes> {
                             const SizedBox(
                               height: 18,
                             ),
-                            TextField(
-                              textCapitalization: TextCapitalization.sentences,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              style: const TextStyle(
-                                  fontSize: 17.0, color: Colors.white),
-                              controller: descriptionController,
-                              decoration: const InputDecoration.collapsed(
-                                hintText: 'Type something...',
-                                hintStyle: TextStyle(
-                                    color: Color(0Xff939393), fontSize: 17.0),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                physics: BouncingScrollPhysics(),
+                                child: TextField(
+                                  textCapitalization:
+                                      TextCapitalization.sentences,
+                                  keyboardType: TextInputType.multiline,
+                                  maxLines: null,
+                                  style: const TextStyle(
+                                      fontSize: 17.0, color: Colors.white),
+                                  controller: descriptionController,
+                                  decoration: const InputDecoration.collapsed(
+                                    hintText: 'Type something...',
+                                    hintStyle: TextStyle(
+                                        color: Color(0Xff939393), fontSize: 17.0),
+                                  ),
+                                ),
                               ),
                             ),
                           ],
