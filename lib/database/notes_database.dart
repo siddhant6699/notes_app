@@ -75,7 +75,6 @@ class NotesDatabase {
 
   Future<int> update(Note note) async {
     final db = await instance.database;
-
     return db.update(
       tableNotes,
       note.toJson(),

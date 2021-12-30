@@ -1,12 +1,9 @@
-import 'dart:math';
 import 'dart:ui';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:notes_app/database/notes_database.dart';
 import 'package:notes_app/delete/delete_bloc.dart';
 import 'package:notes_app/delete/delete_event.dart';
 import 'package:notes_app/homescreen/homescreen_bloc.dart';
@@ -89,6 +86,30 @@ class _HomeScreenState extends State<HomeScreen> {
                               itemCount: state.notesListing.length,
                               itemBuilder: (context, index) {
                                 return GestureDetector(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                            builder: (context) => AddNotes(
+                                                  id: state
+                                                      .notesListing[index].id,
+                                                  title: state
+                                                      .notesListing[index]
+                                                      .title,
+                                                  description: state
+                                                      .notesListing[index]
+                                                      .description,
+                                                  createdon: state
+                                                      .notesListing[index]
+                                                      .createdOn,
+                                                  cardColor: state
+                                                      .notesListing[index]
+                                                      .cardColor,
+                                                )))
+                                        .then((value) => setState(() {
+                                              BlocProvider.of<HomeBloc>(context)
+                                                  .add(HomeDatabaseRequest());
+                                            }));
+                                  },
                                   onLongPress: () {
                                     setState(() {
                                       selectedCard = index;
@@ -199,7 +220,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               },
                               staggeredTileBuilder: (index) {
                                 return StaggeredTile.count(
-                                    1, index.isEven ? 1.04 : 0.89);
+                                    1, index.isEven ? 1.03 : 0.89);
                               }),
                         ],
                       ),
