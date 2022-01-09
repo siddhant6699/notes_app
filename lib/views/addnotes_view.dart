@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,6 +7,7 @@ import 'package:notes_app/addnotes/addnotes_bloc.dart';
 import 'package:notes_app/addnotes/addnotes_event.dart';
 import 'package:notes_app/addnotes/addnotes_state.dart';
 import 'package:notes_app/notes_model.dart';
+import 'package:flutter/services.dart';
 import 'package:notes_app/updatenote/update_bloc.dart';
 import 'package:notes_app/updatenote/update_event.dart';
 
@@ -66,26 +68,26 @@ class _AddNotesState extends State<AddNotes> {
                     titleController.text.trim().isEmpty) {
                   Navigator.pop(context);
                 } else {
-                    if (widget.id == null) {
-                      BlocProvider.of<AddNoteBloc>(context).add(AddNoteRequest(
-                          noteDate: Note(
-                        title: titleController.text,
-                        description: descriptionController.text,
-                        createdOn: DateTime.now(),
-                        cardColor: colorList[random.nextInt(7)],
-                      )));
-                    } else {
-                      BlocProvider.of<UpdateNoteBloc>(context).add(
-                          UpdateNoteRequest(
-                              noteDate: Note(
-                                  id: widget.id,
-                                  title: titleController.text,
-                                  description: descriptionController.text,
-                                  createdOn: DateTime.now(),
-                                  cardColor: widget.cardColor!)));
-                    }
-                    Navigator.pop(context);
+                  if (widget.id == null) {
+                    BlocProvider.of<AddNoteBloc>(context).add(AddNoteRequest(
+                        noteDate: Note(
+                      title: titleController.text,
+                      description: descriptionController.text,
+                      createdOn: DateTime.now(),
+                      cardColor: colorList[random.nextInt(7)],
+                    )));
+                  } else {
+                    BlocProvider.of<UpdateNoteBloc>(context).add(
+                        UpdateNoteRequest(
+                            noteDate: Note(
+                                id: widget.id,
+                                title: titleController.text,
+                                description: descriptionController.text,
+                                createdOn: DateTime.now(),
+                                cardColor: widget.cardColor!)));
                   }
+                  Navigator.pop(context);
+                }
                 return false;
               },
               child: Scaffold(
@@ -97,76 +99,59 @@ class _AddNotesState extends State<AddNotes> {
                       },
                       child: SafeArea(
                         child: Padding(
-                          padding: const EdgeInsets.all(20.0),
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               const SizedBox(
-                                height: 5,
+                                //height: 5,
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: 40,
-                                    height: 35,
-                                    child: TextButton(
-                                      style: TextButton.styleFrom(
-                                        backgroundColor: Colors.white,
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(4),
-                                        ),
-                                      ),
-                                      child: const Icon(
-                                        Icons.arrow_left,
-                                        color: Colors.black,
-                                      ),
-                                      onPressed: () {
-                                        if (descriptionController
-                                                .text.trim().isEmpty ||
-                                            titleController.text.trim().isEmpty) {
-                                          Navigator.pop(context);
-                                        } else {
-                                          if (widget.id == null) {
-                                            BlocProvider.of<AddNoteBloc>(
-                                                    context)
-                                                .add(AddNoteRequest(
-                                                    noteDate: Note(
-                                              title: titleController.text,
-                                              description:
-                                                  descriptionController.text,
-                                              createdOn: DateTime.now(),
-                                              cardColor:
-                                                  colorList[random.nextInt(7)],
-                                            )));
-                                          } else {
-                                            BlocProvider.of<
-                                                    UpdateNoteBloc>(context)
-                                                .add(UpdateNoteRequest(
-                                                    noteDate: Note(
-                                                        id: widget.id,
-                                                        title: titleController
-                                                            .text,
-                                                        description:
-                                                            descriptionController
-                                                                .text,
-                                                        createdOn:
-                                                            DateTime.now(),
-                                                        cardColor: widget
-                                                            .cardColor!)));
-                                          }
-                                          Navigator.pop(context);
-                                        }
-                                      },
-                                    ),
-                                  ),
-                                ],
+                              GestureDetector(
+                                onTap: () {
+                                  if (descriptionController.text
+                                          .trim()
+                                          .isEmpty ||
+                                      titleController.text.trim().isEmpty) {
+                                    Navigator.pop(context);
+                                  } else {
+                                    if (widget.id == null) {
+                                      BlocProvider.of<AddNoteBloc>(context)
+                                          .add(AddNoteRequest(
+                                              noteDate: Note(
+                                        title: titleController.text,
+                                        description: descriptionController.text,
+                                        createdOn: DateTime.now(),
+                                        cardColor: colorList[random.nextInt(7)],
+                                      )));
+                                    } else {
+                                      BlocProvider.of<UpdateNoteBloc>(context)
+                                          .add(UpdateNoteRequest(
+                                              noteDate: Note(
+                                                  id: widget.id,
+                                                  title: titleController.text,
+                                                  description:
+                                                      descriptionController
+                                                          .text,
+                                                  createdOn: DateTime.now(),
+                                                  cardColor:
+                                                      widget.cardColor!)));
+                                    }
+                                    Navigator.pop(context);
+                                  }
+                                },
+                                child: Icon(
+                                  CupertinoIcons.arrow_left_square_fill,
+                                  color: Colors.white,
+                                  size: 45,
+                                ),
                               ),
                               const SizedBox(
-                                height: 15,
+                                //height: 15,
                               ),
                               TextField(
+                                inputFormatters: [
+                                  LengthLimitingTextInputFormatter(50),
+                                ],
                                 textCapitalization:
                                     TextCapitalization.sentences,
                                 maxLines: 1,

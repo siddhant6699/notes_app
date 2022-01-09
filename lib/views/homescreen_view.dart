@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -56,22 +57,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text(
+                            children: const [
+                              Text(
                                 'Notes',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 30,
                                     color: Colors.white),
                               ),
-                              IconButton(
-                                  tooltip: "Profile",
-                                  onPressed: () {},
-                                  icon: const Icon(
-                                    Icons.person_pin_rounded,
-                                    color: Colors.white,
-                                    size: 35,
-                                  ))
                             ],
                           ),
                           const SizedBox(
@@ -229,7 +222,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 floatingActionButton: FloatingActionButton(
                   backgroundColor: Colors.white,
-                  tooltip: "Add Note",
                   onPressed: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(
@@ -240,7 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
                             }));
                   },
                   child: const Icon(
-                    Icons.add,
+                    CupertinoIcons.add,
+                    size: 25,
                     color: Colors.black,
                   ),
                 ),

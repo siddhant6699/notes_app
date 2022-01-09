@@ -3,7 +3,7 @@ import 'package:notes_app/views/homescreen_view.dart';
 
 //Color should go in database for particular note
 
-void main() {
+Future<void> main() async {
   runApp(const MyApp());
 }
 
