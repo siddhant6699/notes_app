@@ -1,16 +1,14 @@
 # notes_app
 
-A new Flutter project.
+A flutter app that lets a user to add, read, update and delete the notes in there local storage.
 
-## Getting Started
+## App Features
+1. Save, update, delete notes.
 
-This project is a starting point for a Flutter application.
+2. No internet connectivity required as all the data is saved locally.
 
-A few resources to get you started if this is your first Flutter project:
+3. Easy to use User-Interface. 
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+# Screenshots
+<img src="https://user-images.githubusercontent.com/56200946/152468496-28ec0e9e-03b1-450a-8a23-432339eb9c06.png" width="250" height="500" /><img src="https://user-images.githubusercontent.com/56200946/152468504-38d9187c-9b9e-45e3-abe7-9248e542c465.png" width="250" height="500" /><img src="https://user-images.githubusercontent.com/56200946/152468500-346355ed-2281-4a29-9db6-7bfef0b3b033.png" width="250" height="500" />
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
